@@ -1,7 +1,7 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, Session, DeclarativeBase
 
-from dependencies import get_db
+from app.dependencies import get_db
 
 from typing import Annotated
 
@@ -21,7 +21,8 @@ DB_PASSWORD = os.getenv("DB_PASSWORD")
 class Base(DeclarativeBase):
     pass
 
-SQLALCHEMY_DATABASE_URL =f"potgresql+psycopg2://(DB_USER):(DB_PASSWORD)@(DB_HOST):DB_PORT)/(DB_NAME)"
+SQLALCHEMY_DATABASE_URL = f"postgresql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
+
 
 
 engine = create_engine( 
