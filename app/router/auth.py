@@ -20,7 +20,7 @@ async def registration(
     is_user_exists = db.query(User).filter(User.email == user.email).first()
     if is_user_exists:
         raise HTTPException(
-            status_code=400,
+            status_code=400       ,
             detail="User with this email already exists."
         )
     

@@ -6,7 +6,7 @@ from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from fastapi import Request, HTTPException, Depends
 
 from app.dependencies import db_dep
-from app.models import User
+from app.models import *
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
@@ -25,17 +25,12 @@ def verify_password(plain_password, hashed_password):
 
 
 def create_access_token(data: dict, expires_delta: float = None):
-    """
-    - Creates a new JWT token for logging-in user
-    """
-    
-    # Access tokenni nima bilan generatsiya qilaman?
-    # Access token qanaqa token o'zi?
+
+
     delta = timedelta(minutes=expires_delta) if expires_delta else timedelta(days=ACCESS_TOKEN_EXPIRE_MINUTES)
     expire_time = datetime.now(timezone.utc) + delta
     data.update({"exp": expire_time})
 
-    # data = {"username": <>, "password": <>, "role": <>, "exp": <>}
 
     access_token = jwt.encode(
         data,
