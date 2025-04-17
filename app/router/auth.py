@@ -20,7 +20,7 @@ async def registration(
     is_user_exists = db.query(User).filter(User.email == user.email).first()
     if is_user_exists:
         raise HTTPException(
-            status_code=400       ,
+            status_code=400,
             detail="User with this email already exists."
         )
     
@@ -47,7 +47,7 @@ async def login(
         user: AuthLogin
     ):
     db_user = db.query(User).filter(User.email == user.email).first()
-    is_correct = verify_password(user.password, db_user.hashed_password)
+    is_correct = verify_password(user.password, db_user.hashed_password) if db_user else False
 
     if not db_user or not is_correct:
         raise HTTPException(
@@ -62,5 +62,10 @@ async def login(
     return {
         "access_token": access_token,
         "refresh_token": refresh_token,
-        "token_type": "Bearerc/x"
+        "token_type": "Bearer"
     }
+
+
+@router.get("/test")
+async def test():
+    return {"Hello": "World"}
