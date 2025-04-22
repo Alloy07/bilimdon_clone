@@ -1,0 +1,34 @@
+from fastapi import Request
+from sqlalchemy.orm import mapped_column, Mapped, relationship
+from sqlalchemy import String, DateTime, Date, Integer, Boolean, ForeignKey
+
+from datetime import datetime, date, timezone
+from typing import Optional, List
+
+from app.database import Base
+
+
+from app.models.submission import Submission
+from app.models.game import GameQuestion
+from app.models.option  import Option
+from app.models.topic import Topic
+
+
+class Question(Base):
+    __tablename__ = "questions"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    owner_id: Mapped[int] = mapped_column(Integer, ForeignKey("users.id"))
+    title: Mapped[str] = mapped_column(String(100))
+    description: Mapped[str] = mapped_column(String(1000), nullable=True)
+    topic_id: Mapped[int] = mapped_column(Integer, ForeignKey("topics.id"))
+    created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.now(timezone.utc))
+    updated_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.now(timezone.utc))
+
+    topic: Mapped["Topic"] = relationship("Topic", back_populates="questions")
+    option_ids: Mapped[List["Option"]] = relationship(back_populates="question")
+    games: Mapped[List["GameQuestion"]] = relationship(back_populates="question")
+    submissions: Mapped[List["Submission"]] = relationship(back_populates="question")
+
+    async def __admin_repr__(self, request: Request):
+        return self.title
